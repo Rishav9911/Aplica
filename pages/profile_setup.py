@@ -108,6 +108,26 @@ for i in range(num_internships):
             "responsibilities": intern_responsibilities
         })
 
+# --- Career Preferences ---
+st.header("Career Preferences")
+remote_work = st.radio("Would you prefer remote work?", ["Yes", "No"])
+work_outside_india = st.radio("Would you consider working outside India?", ["Yes", "No", "Open to Both"])
+preferred_locations_india = st.text_area("Top 5 Preferred Locations in India (Separate by commas)", placeholder="e.g., Delhi, Mumbai, Hyderabad, Pune, Gurugram")
+#preferred_locations_abroad = st.text_area("Top 5 Preferred Locations Outside India (Separate by commas)")
+preferred_profiles = st.text_area("Top 3 Preferred Profiles (Separate by commas)", placeholder="e.g., Python Developer, Data Scientist")
+# Top 5 Preferred Locations (Outside India)
+if work_outside_india in ["Yes", "Open to Both"]:
+    preferred_locations_abroad = st.text_area(
+        "Top 5 Preferred Locations (Outside India) (Separate by commas)",
+        placeholder="e.g., New York, London, Sydney, Berlin, Toronto"
+    )
+else:
+    st.text_area(
+        "Top 5 Preferred Locations (Outside India) (Separate by commas)",
+        disabled=True,
+        value="N/A (Not applicable based on your preference)",
+        placeholder="N/A (Not applicable based on your preference)"
+    )
 # --- Resume Upload ---
 st.header("Upload Resume")
 resume = st.file_uploader("Upload your resume (PDF only)", type=["pdf"])
@@ -134,7 +154,14 @@ def store_user_profile():
         "soft_skills": soft_skills.split(","),
         "projects": projects,
         "internships": internships,
-        "resume": resume_data
+        "resume": resume_data,
+        "career_preferences": {
+            "remote_work": remote_work,
+            "work_outside_india": work_outside_india,
+            "preferred_locations_india": preferred_locations_india.split(","),
+            "preferred_locations_abroad": preferred_locations_abroad.split(","),
+            "preferred_profiles": preferred_profiles.split(",")
+        }
     })
     return True
 
