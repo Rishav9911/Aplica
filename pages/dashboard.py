@@ -85,6 +85,15 @@ if user_profile:
                 st.write(f"**Role:** {intern['role']}")
                 st.write(f"**Duration:** {intern['duration']}")
                 st.write(f"**Key Learnings:** {intern['responsibilities']}")
+    
+    # --- Career Preferences ---
+    if "career_preferences" in user_profile:
+        st.header("🌍 Career Preferences")
+        st.write(f"**Remote Work Preference:** {user_profile['career_preferences'].get('remote_work', 'N/A')}")
+        st.write(f"**Work Outside India Preference:** {user_profile['career_preferences'].get('work_outside_india', 'N/A')}")
+        st.write(f"**Preferred Locations (India):** {', '.join(user_profile['career_preferences'].get('preferred_locations_india', []))}")
+        st.write(f"**Preferred Locations (Outside India):** {', '.join(user_profile['career_preferences'].get('preferred_locations_abroad', []))}")
+        st.write(f"**Preferred Profiles:** {', '.join(user_profile['career_preferences'].get('preferred_profiles', []))}")
 
     # --- Resume Download ---
     if user_profile.get("resume"):
