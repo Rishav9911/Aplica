@@ -1,0 +1,24 @@
+{
+  "name": "Aplica+",
+  "version": "1.0",
+  "manifest_version": 3,
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "tabs"
+  ],
+  "background": { "service_worker": "background.js", "type": "module" },
+  "host_permissions": ["*://*/*"],
+  "action": {
+      "default_popup": "popup.html",
+      "default_icon": "icon.png"
+  },
+  "content_scripts": [
+      {
+          "matches": ["<all_urls>"],
+          "js": ["content.js"],
+          "run_at": "document_idle"
+      }
+  ]
+}
