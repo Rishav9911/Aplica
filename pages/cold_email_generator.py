@@ -44,7 +44,7 @@ LinkedIn: {student['linkedin']}
 (Resume Attached)".
 """
 
-    response = ollama.chat(model="llama2", messages=[{"role": "user", "content": prompt}])
+    response = ollama.chat(model="llama2:7b", messages=[{"role": "user", "content": prompt}])
     
     email_text = response['message']['content']
 
