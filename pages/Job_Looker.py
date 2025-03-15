@@ -180,6 +180,7 @@ custom_job = st.text_input("Or Enter a Custom Job Profile:")
 st.subheader("🌍 Select a Location")
 selected_location = st.selectbox("Choose a Location:", job_locations)
 
+
 if st.button("🔎 Find Jobs"):
     if not resume_text:
         st.error("No resume found in your profile. Please upload a resume in your profile settings.")
@@ -189,7 +190,13 @@ if st.button("🔎 Find Jobs"):
 
         if matched_jobs:
             st.success(f"✅ Found {len(matched_jobs)} relevant jobs!")
-            df = pd.DataFrame(matched_jobs)
-            st.dataframe(df)
+
+            for job in matched_jobs[:10]:  # Display top 10
+                st.markdown(f"### **{job['Title']}** at {job['Company']}")
+                st.write(f"📍 {job['Location']}")
+                st.markdown(f"[🔗 Job Link]({job['Job URL']})")
+                st.write(f"🔥 **Match Score:** {job['Similarity Score']:.2f}")
+                st.write("---")
+
         else:
             st.warning("No highly relevant jobs found based on AI matching.")
