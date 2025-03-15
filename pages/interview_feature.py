@@ -16,6 +16,7 @@ load_dotenv()
 
 DB_NAME = os.getenv("QUESTIONS_DB")
 QUESTIONS_C = os.getenv("QUESTIONS_C")
+ANSWERS= os.getenv("ANSWERS")
 username = urllib.parse.quote_plus(os.getenv("MONGO_USERNAME"))
 password = urllib.parse.quote_plus(os.getenv("MONGO_PASSWORD"))
 MONGO_URI = f"mongodb+srv://{username}:{password}@aplica.cozta.mongodb.net/?retryWrites=true&w=majority"
@@ -24,7 +25,15 @@ MONGO_URI = f"mongodb+srv://{username}:{password}@aplica.cozta.mongodb.net/?retr
 client = pymongo.MongoClient(MONGO_URI)
 db = client[DB_NAME]
 collection = db[QUESTIONS_C]
-answers_collection = db["answers"]
+answers_collection = db[ANSWERS]
+
+# Redirect if not authenticated
+if "authenticated" not in st.session_state or not st.session_state.authenticated:
+    st.error("You must be logged in to access this page!")
+    st.stop()
+
+user_email = st.session_state.email
+
 
 # Load Whisper model
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -37,9 +46,6 @@ def get_random_question():
 
 # Streamlit UI
 st.title("🎙️ AI-Powered Mock Interview")
-
-# User Email Input
-user_email = st.text_input("📧 Enter your email:", key="user_email")
 
 # Ensure question persists across reruns
 if "question" not in st.session_state:
@@ -97,6 +103,9 @@ if "audio_ready" in st.session_state and st.session_state.audio_ready:
         st.write("📝 **Transcription:**")
         st.info(transcribed_text)  
 
+        st.write("⏳ Processing feedback...")
+
+
         # Call LLaMA-2 for analysis
         prompt = f"""
         You are an expert interview coach. Your task is to analyze the user's interview answer based on clarity, confidence, structure, and relevance.
@@ -118,23 +127,30 @@ if "audio_ready" in st.session_state and st.session_state.audio_ready:
         analysis = response["message"]
 
         st.write("📊 **AI Feedback:**")
-        st.success(analysis)
+
+        # Extract text from the message object
+        if hasattr(analysis, 'content'):
+            analysis_text = analysis.content  # Extract the actual text
+        else:
+            analysis_text = str(analysis)  # Convert to string if necessary
+
+        formatted_analysis = analysis_text.replace("\n", "\n\n")  # Adds spacing between points
+        st.markdown(f"```\n{formatted_analysis}\n```")  # Displays it as a structured markdown block
+
+
 
         # Save everything to MongoDB
-        #if user_email:
-         #   with open(AUDIO_FILE, "rb") as f:
-          #      audio_bytes = f.read()
-
-           # answers_collection.insert_one({
-            #    "email": user_email,
-             #   "question": st.session_state.question,
-              #  "transcription": transcribed_text,
-               # "analysis": analysis,
-                #"audio": audio_bytes
-            #})
-            #st.success("✅ Response saved to database!")
+        if user_email:
+           answers_collection.insert_one({
+               "email": user_email,
+               "question": st.session_state.question,
+               "transcription": transcribed_text,
+               "analysis": formatted_analysis,
+            })
+        st.success("✅ Response saved to database!")
 
 # Get a new question
 if st.button("🔄 Get New Question"):
     st.session_state.question = get_random_question()
     st.rerun()
+
