@@ -154,3 +154,4 @@ if st.button("🔄 Get New Question"):
     st.session_state.question = get_random_question()
     st.rerun()
 
+st.sidebar.button("Logout", on_click=lambda: st.session_state.update({"authenticated": False, "email": None, "full_name": None}))

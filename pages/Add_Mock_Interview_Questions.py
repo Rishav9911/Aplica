@@ -20,6 +20,10 @@ client = MongoClient(MONGO_URI)
 db = client[DB_NAME]
 collection = db[QUESTIONS_C] 
 
+if "authenticated" not in st.session_state or not st.session_state.authenticated:
+    st.error("You must be logged in to access this page!")
+    st.stop()
+
 # Streamlit App
 st.title("Interview Question Manager")
 st.subheader("Add a Custom Interview Question(only one)")
@@ -39,3 +43,5 @@ st.subheader("Interview Questions")
 questions = collection.find()
 for q in questions:
     st.write(f"- {q['question']}")
+
+st.sidebar.button("Logout", on_click=lambda: st.session_state.update({"authenticated": False, "email": None, "full_name": None}))

@@ -17,6 +17,10 @@ from google.auth.transport.requests import Request
 load_dotenv()
 GOOGLE_CREDENTIALS = os.getenv("GOOGLE_CREDENTIALS_PATH")
 
+if "authenticated" not in st.session_state or not st.session_state.authenticated:
+    st.error("You must be logged in to access this page!")
+    st.stop()
+
 # MongoDB Connection
 def get_student_details(email):
     client = MongoClient("mongodb+srv://sachdevarishav449:Parishu449%40@aplica.cozta.mongodb.net/")
@@ -216,3 +220,5 @@ if uploaded_file:
                 st.error("❌ Authentication failed. Please check your Google API credentials.")
         else:
             st.warning("⚠️ Please provide an email subject, body, and select the email column.")
+            
+st.sidebar.button("Logout", on_click=lambda: st.session_state.update({"authenticated": False, "email": None, "full_name": None}))
