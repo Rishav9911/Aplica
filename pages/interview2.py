@@ -4,9 +4,13 @@ from aiortc.contrib.media import MediaRecorder
 import os
 import time
 import pymongo
+import torch
 import random
 import urllib.parse
 from dotenv import load_dotenv
+from transformers import pipeline
+
+
 
 # Load environment variables
 load_dotenv()
@@ -23,6 +27,11 @@ client = pymongo.MongoClient(MONGO_URI)
 db = client[DB_NAME]
 collection = db[QUESTIONS_C]
 answers_collection = db["answers"]
+
+# Load Whisper model
+device = "cuda" if torch.cuda.is_available() else "cpu"
+pipe = pipeline("automatic-speech-recognition", model="openai/whisper-large-v2", device=0 if torch.cuda.is_available() else -1)
+
 
 # Function to get a random question
 def get_random_question():
@@ -75,6 +84,8 @@ if not webrtc_ctx.state.playing and st.session_state.recording:
     if os.path.exists(AUDIO_FILE):  # Check if recording exists
         st.audio(AUDIO_FILE, format="audio/wav")
         st.success("✅ Audio recorded successfully!")
+        st.session_state.audio_ready = True  # Set session state to allow transcription
+
         
         # Save recording to MongoDB
         #with open(AUDIO_FILE, "rb") as f:
@@ -87,7 +98,23 @@ if not webrtc_ctx.state.playing and st.session_state.recording:
     else:
         st.error("⚠️ No audio recorded! Please try again.")
 
+
+# Transcription Button
+if "audio_ready" in st.session_state and st.session_state.audio_ready:
+    if st.button("📝 Transcribe Answer"):
+        st.write("⏳ Transcribing audio...")
+        
+        # Transcribe with Whisper
+        result = pipe(AUDIO_FILE, return_timestamps=True)
+        transcribed_text = result['text']
+
+        st.write("📝 **Transcription:**")
+        st.info(transcribed_text)  # Display the transcribed text
+
+
 # Button to get a new question
 if st.button("🔄 Get New Question"):
     st.session_state.question = get_random_question()
     st.rerun()
+
+
