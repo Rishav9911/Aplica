@@ -7,8 +7,6 @@ import urllib.parse
 
 # Load environment variables
 load_dotenv()
-
-
 DB_NAME = os.getenv("DB")  
 C1=os.getenv("C1")
 
@@ -52,7 +50,7 @@ def register_user(email, password, full_name, role="user"):
     st.session_state.authenticated = True
     st.session_state.email = email
     st.session_state.full_name = full_name
-    st.switch_page("pages/profile_setup.py")
+    st.switch_page("pages/Your_Profile_Setup.py")
     return True
 
 # Authenticate User
@@ -63,7 +61,7 @@ def authenticate_user(email, password):
         st.session_state.user_role = user["role"]
         st.session_state.email = email
         st.session_state.full_name = user["full_name"]
-        st.switch_page("pages/dashboard.py")  # Redirect to dashboard
+        st.switch_page("pages/Your_Dashboard.py")  # Redirect to dashboard
 
         return True
     return False

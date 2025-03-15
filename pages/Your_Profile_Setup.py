@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-
 DB_NAME = os.getenv("DB")  
 C2=os.getenv("C2")
 
@@ -173,7 +172,7 @@ if st.button("Save Profile"):
     if resume:
         store_user_profile()
         st.success("Profile saved successfully!")
-        st.switch_page("pages/dashboard.py")  # Redirect to dashboard
+        st.switch_page("pages/Your_Dashboard.py")  # Redirect to dashboard
 
     else:
         st.error("Please upload your resume.")

@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
 DB_NAME = os.getenv("DB")  
 C2=os.getenv("C2")
 
