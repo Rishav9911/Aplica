@@ -36,7 +36,7 @@ def check_password(password, hashed):
     return bcrypt.checkpw(password.encode('utf-8'), hashed.encode('utf-8') if isinstance(hashed, str) else hashed)
 
 # Register New User
-def register_user(email, password, full_name, role="user"):
+def register_user(email, password, full_name,first_name,last_name, role="user"):
     existing_user = users_collection.find_one({"email": email})
     if existing_user:
         return False  # Email already exists
@@ -45,6 +45,8 @@ def register_user(email, password, full_name, role="user"):
         "email": email,
         "password": hashed_password,
         "full_name": full_name,
+        "first_name":first_name,
+        "last_name":last_name,
         "role": role
     })
     st.session_state.authenticated = True
@@ -82,11 +84,13 @@ menu = st.sidebar.selectbox("Menu", ["Login", "Register"])
 
 if menu == "Register":
     st.subheader("Register")
-    full_name = st.text_input("Full Name")
+    first_name=st.text_input("First Name")
+    last_name=st.text_input("Last Name")
+    full_name=first_name+" "+last_name
     email = st.text_input("Email")
     password = st.text_input("Password", type="password")
     if st.button("Register"):
-        if register_user(email, password, full_name):
+        if register_user(email, password, full_name,first_name,last_name):
             st.success(f"Welcome, {full_name}! Redirecting to profile setup...")
         else:
             st.error("Email already exists. Try logging in.")

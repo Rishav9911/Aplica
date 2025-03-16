@@ -246,23 +246,35 @@ certifications = st.text_area("Certifications (Separate by commas)", ",".join(ge
 st.header("Work Experience")
 has_experience = st.radio("Do you have prior work experience?", ["Yes", "No"], index=0 if get_value("work_experience") else 1)
 
-work_experience = get_value("work_experience", [])
-new_experience = []
+work_experience = []
 if has_experience == "Yes":
-    for i, exp in enumerate(work_experience):
+    # Get existing work experience count or default to 1
+    existing_experiences = get_value("work_experience", [])
+    num_experiences = st.number_input(
+        "How many previous jobs have you had?", 
+        min_value=1, max_value=10, step=1, 
+        value=len(existing_experiences) if existing_experiences else 1
+    )
+
+    for i in range(num_experiences):
+        exp = existing_experiences[i] if i < len(existing_experiences) else {}  # Pre-fill if exists
         with st.expander(f"Work Experience {i+1}"):
             company_name = st.text_input(f"Company Name {i+1}", exp.get("company", ""))
             job_title = st.text_input(f"Job Title {i+1}", exp.get("title", ""))
-            job_duration = st.text_input(f"Duration {i+1}", exp.get("duration", ""))
+            job_duration = st.text_input(f"Duration (e.g., Jan 2020 - Dec 2022) {i+1}", exp.get("duration", ""))
             job_responsibilities = st.text_area(f"Job Responsibilities {i+1}", exp.get("responsibilities", ""))
             job_achievements = st.text_area(f"Key Achievements {i+1}", exp.get("achievements", ""))
-            new_experience.append({
+            
+            work_experience.append({
                 "company": company_name,
                 "title": job_title,
                 "duration": job_duration,
                 "responsibilities": job_responsibilities,
                 "achievements": job_achievements
             })
+else:
+    work_experience = []  # If "No", clear the work experience list
+
 
 # --- Skills ---
 st.header("Skills")
@@ -271,20 +283,99 @@ soft_skills = st.text_area("Soft Skills (Separate by commas)", ",".join(get_valu
 
 # --- Projects ---
 st.header("Projects")
-projects = get_value("projects", [])
+existing_projects = get_value("projects", [])
 new_projects = []
-for i, proj in enumerate(projects):
+
+# Get existing project count or default to 1
+num_projects = st.number_input(
+    "How many projects have you worked on?",
+    min_value=0, max_value=10, step=1,
+    value=len(existing_projects) if existing_projects else 1
+)
+
+for i in range(num_projects):
+    proj = existing_projects[i] if i < len(existing_projects) else {}  # Pre-fill if exists
     with st.expander(f"Project {i+1}"):
         project_title = st.text_input(f"Project Title {i+1}", proj.get("title", ""))
         project_description = st.text_area(f"Project Description {i+1}", proj.get("description", ""))
-        project_technologies = st.text_input(f"Technologies Used {i+1}", proj.get("technologies", ""))
+        project_technologies = st.text_input(f"Technologies Used {i+1} (Separate by commas)", proj.get("technologies", ""))
         project_github = st.text_input(f"GitHub/Portfolio Link {i+1}", proj.get("github", ""))
+
         new_projects.append({
             "title": project_title,
             "description": project_description,
             "technologies": project_technologies,
             "github": project_github
         })
+
+# # --- Internships & Training ---
+# st.header("Internships & Training")
+# existing_internships = get_value("internships", [])
+# new_internships = []
+
+# # Get existing count or default to 1
+# num_internships = st.number_input(
+#     "How many internships or training programs have you completed?",
+#     min_value=0, max_value=10, step=1,
+#     value=len(existing_internships) if existing_internships else 1
+# )
+
+# for i in range(num_internships):
+#     intern = existing_internships[i] if i < len(existing_internships) else {}  # Pre-fill if exists
+#     with st.expander(f"Internship/Training {i+1}"):
+#         intern_company = st.text_input(f"Company/Institute Name {i+1}", intern.get("company", ""))
+#         intern_role = st.text_input(f"Internship Role {i+1}", intern.get("role", ""))
+#         intern_duration = st.text_input(f"Duration (e.g., 3 months) {i+1}", intern.get("duration", ""))
+#         intern_responsibilities = st.text_area(f"Key Learnings {i+1}", intern.get("responsibilities", ""))
+
+#         new_internships.append({
+#             "company": intern_company,
+#             "role": intern_role,
+#             "duration": intern_duration,
+#             "responsibilities": intern_responsibilities
+#         })
+
+# --- Career Preferences ---
+st.header("Career Preferences")
+
+remote_work = st.radio(
+    "Would you prefer remote work?",
+    ["Yes", "No"],
+    index=["Yes", "No"].index(get_value("career_preferences.remote_work", "Yes"))
+)
+
+work_outside_india = st.radio(
+    "Would you consider working outside India?",
+    ["Yes", "No", "Open to Both"],
+    index=["Yes", "No", "Open to Both"].index(get_value("career_preferences.work_outside_india", "Open to Both"))
+)
+
+preferred_locations_india = st.text_area(
+    "Top 5 Preferred Locations in India (Separate by commas)",
+    placeholder="e.g., Delhi, Mumbai, Hyderabad, Pune, Gurugram",  # Placeholder text
+    value=", ".join(get_value("career_preferences.preferred_locations_india", []))  # Only fill if data exists
+)
+
+preferred_profiles = st.text_area(
+    "Top 3 Preferred Profiles (Separate by commas)",
+    placeholder="e.g., Python Developer, Data Scientist",  # Placeholder text
+    value=", ".join(get_value("career_preferences.preferred_profiles", []))  # Only fill if data exists
+)
+
+if work_outside_india in ["Yes", "Open to Both"]:
+    preferred_locations_abroad = st.text_area(
+        "Top 5 Preferred Locations (Outside India) (Separate by commas)",
+        placeholder="e.g., New York, London, Sydney, Berlin, Toronto",  # Placeholder text
+        value=", ".join(get_value("career_preferences.preferred_locations_abroad", []))  # Only fill if data exists
+    )
+else:
+    st.text_area(
+        "Top 5 Preferred Locations (Outside India) (Separate by commas)",
+        disabled=True,
+        value="N/A (Not applicable based on your preference)",
+        placeholder="N/A (Not applicable based on your preference)"
+    )
+
 
 # --- Resume Upload ---
 st.header("Upload Resume")
@@ -312,11 +403,18 @@ def store_or_update_profile():
         "graduation_year": graduation_year,
         "cgpa": cgpa,
         "certifications": certifications.split(",") if certifications else [],
-        "work_experience": new_experience,
+        "work_experience": work_experience,
         "technical_skills": technical_skills.split(",") if technical_skills else [],
         "soft_skills": soft_skills.split(",") if soft_skills else [],
         "projects": new_projects,
-        "resume": resume_data
+        "resume": resume_data,
+        "career_preferences": {
+            "remote_work": remote_work,
+            "work_outside_india": work_outside_india,
+            "preferred_locations_india": preferred_locations_india.split(",") if preferred_locations_india else [],
+            "preferred_locations_abroad": preferred_locations_abroad.split(",") if preferred_locations_abroad else [],
+            "preferred_profiles": preferred_profiles.split(",") if preferred_profiles else []
+        }
     }
 
     # Update existing profile or insert new
