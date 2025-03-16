@@ -242,39 +242,38 @@ graduation_year = st.number_input("Year of Graduation", min_value=1900, max_valu
 cgpa = st.number_input("CGPA (if applicable)", min_value=0.0, max_value=10.0, step=0.1, value=float(get_value("cgpa", 0.0)))
 certifications = st.text_area("Certifications (Separate by commas)", ",".join(get_value("certifications", [])))
 
-# --- Work Experience ---
-st.header("Work Experience")
-has_experience = st.radio("Do you have prior work experience?", ["Yes", "No"], index=0 if get_value("work_experience") else 1)
+# # --- Work Experience ---
+# st.header("Work Experience")
+# has_experience = st.radio("Do you have prior work experience?", ["Yes", "No"], index=0 if get_value("work_experience") else 1)
 
-work_experience = []
-if has_experience == "Yes":
-    # Get existing work experience count or default to 1
-    existing_experiences = get_value("work_experience", [])
-    num_experiences = st.number_input(
-        "How many previous jobs have you had?", 
-        min_value=1, max_value=10, step=1, 
-        value=len(existing_experiences) if existing_experiences else 1
-    )
+# work_experience = []
+# if has_experience == "Yes":
+#     # Get existing work experience count or default to 1
+#     existing_experiences = get_value("work_experience", [])
+#     num_experiences = st.number_input(
+#         "How many previous jobs have you had?", 
+#         min_value=1, max_value=10, step=1, 
+#         value=len(existing_experiences) if existing_experiences else 1
+#     )
 
-    for i in range(num_experiences):
-        exp = existing_experiences[i] if i < len(existing_experiences) else {}  # Pre-fill if exists
-        with st.expander(f"Work Experience {i+1}"):
-            company_name = st.text_input(f"Company Name {i+1}", exp.get("company", ""))
-            job_title = st.text_input(f"Job Title {i+1}", exp.get("title", ""))
-            job_duration = st.text_input(f"Duration (e.g., Jan 2020 - Dec 2022) {i+1}", exp.get("duration", ""))
-            job_responsibilities = st.text_area(f"Job Responsibilities {i+1}", exp.get("responsibilities", ""))
-            job_achievements = st.text_area(f"Key Achievements {i+1}", exp.get("achievements", ""))
+#     for i in range(num_experiences):
+#         exp = existing_experiences[i] if i < len(existing_experiences) else {}  # Pre-fill if exists
+#         with st.expander(f"Work Experience {i+1}"):
+#             company_name = st.text_input(f"Company Name {i+1}", exp.get("company", ""))
+#             job_title = st.text_input(f"Job Title {i+1}", exp.get("title", ""))
+#             job_duration = st.text_input(f"Duration (e.g., Jan 2020 - Dec 2022) {i+1}", exp.get("duration", ""))
+#             job_responsibilities = st.text_area(f"Job Responsibilities {i+1}", exp.get("responsibilities", ""))
+#             job_achievements = st.text_area(f"Key Achievements {i+1}", exp.get("achievements", ""))
             
-            work_experience.append({
-                "company": company_name,
-                "title": job_title,
-                "duration": job_duration,
-                "responsibilities": job_responsibilities,
-                "achievements": job_achievements
-            })
-else:
-    work_experience = []  # If "No", clear the work experience list
-
+#             work_experience.append({
+#                 "company": company_name,
+#                 "title": job_title,
+#                 "duration": job_duration,
+#                 "responsibilities": job_responsibilities,
+#                 "achievements": job_achievements
+#             })
+# else:
+#     work_experience = []  # If "No", clear the work experience list
 
 # --- Skills ---
 st.header("Skills")
@@ -308,32 +307,32 @@ for i in range(num_projects):
             "github": project_github
         })
 
-# # --- Internships & Training ---
-# st.header("Internships & Training")
-# existing_internships = get_value("internships", [])
-# new_internships = []
+# --- Internships & Training ---
+st.header("Internships & Training")
+existing_internships = get_value("internships", [])
+new_internships = []
 
-# # Get existing count or default to 1
-# num_internships = st.number_input(
-#     "How many internships or training programs have you completed?",
-#     min_value=0, max_value=10, step=1,
-#     value=len(existing_internships) if existing_internships else 1
-# )
+# Get existing count or default to 1
+num_internships = st.number_input(
+    "How many internships or training programs have you completed?",
+    min_value=0, max_value=10, step=1,
+    value=len(existing_internships) if existing_internships else 1
+)
 
-# for i in range(num_internships):
-#     intern = existing_internships[i] if i < len(existing_internships) else {}  # Pre-fill if exists
-#     with st.expander(f"Internship/Training {i+1}"):
-#         intern_company = st.text_input(f"Company/Institute Name {i+1}", intern.get("company", ""))
-#         intern_role = st.text_input(f"Internship Role {i+1}", intern.get("role", ""))
-#         intern_duration = st.text_input(f"Duration (e.g., 3 months) {i+1}", intern.get("duration", ""))
-#         intern_responsibilities = st.text_area(f"Key Learnings {i+1}", intern.get("responsibilities", ""))
+for i in range(num_internships):
+    intern = existing_internships[i] if i < len(existing_internships) else {}  # Pre-fill if exists
+    with st.expander(f"Internship/Training {i+1}"):
+        intern_company = st.text_input(f"Company/Institute Name {i+1}", intern.get("company", ""))
+        intern_role = st.text_input(f"Internship Role {i+1}", intern.get("role", ""))
+        intern_duration = st.text_input(f"Duration (e.g., 3 months) {i+1}", intern.get("duration", ""))
+        intern_responsibilities = st.text_area(f"Key Learnings {i+1}", intern.get("responsibilities", ""))
 
-#         new_internships.append({
-#             "company": intern_company,
-#             "role": intern_role,
-#             "duration": intern_duration,
-#             "responsibilities": intern_responsibilities
-#         })
+        new_internships.append({
+            "company": intern_company,
+            "role": intern_role,
+            "duration": intern_duration,
+            "responsibilities": intern_responsibilities
+        })
 
 # --- Career Preferences ---
 st.header("Career Preferences")
@@ -399,11 +398,11 @@ def store_or_update_profile():
         "highest_degree": highest_degree,
         "university": university,
         "course": course,
+        "internships": new_internships,
         "field_of_study": field_of_study,
         "graduation_year": graduation_year,
         "cgpa": cgpa,
         "certifications": certifications.split(",") if certifications else [],
-        "work_experience": work_experience,
         "technical_skills": technical_skills.split(",") if technical_skills else [],
         "soft_skills": soft_skills.split(",") if soft_skills else [],
         "projects": new_projects,
