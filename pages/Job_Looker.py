@@ -180,6 +180,11 @@ custom_job = st.text_input("Or Enter a Custom Job Profile:")
 st.subheader("🌍 Select a Location")
 selected_location = st.selectbox("Choose a Location:", job_locations)
 
+view_option = st.radio(
+    "Choose how you want to view the jobs:",
+    ("View All Jobs", "View Only Top 5 Matches")
+)
+
 if st.button("🔎 Find Jobs"):
     if not resume_text:
         st.error("No resume found in your profile. Please upload a resume in your profile settings.")
@@ -189,6 +194,9 @@ if st.button("🔎 Find Jobs"):
 
         if matched_jobs:
             st.success(f"✅ Found {len(matched_jobs)} relevant jobs!")
+            if view_option == "View Only Top 5 Matches":
+                matched_jobs = matched_jobs[:5]  # Show only top 5 jobs
+
             df = pd.DataFrame(matched_jobs)
             st.dataframe(df)
         else:
