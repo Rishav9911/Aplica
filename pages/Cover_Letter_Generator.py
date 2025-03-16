@@ -4,10 +4,17 @@ import ollama
 from datetime import date
 import urllib.parse
 from dotenv import load_dotenv
+from io import BytesIO
+from docx import Document
 from flask import Flask, request, jsonify
 import os
 
 load_dotenv()
+
+# Redirect if not authenticated
+if "authenticated" not in st.session_state or not st.session_state.authenticated:
+    st.error("You must be logged in to access this page!")
+    st.stop()
 
 # Connect to MongoDB
 def get_student_details(email):
@@ -76,24 +83,54 @@ def generate_cover_letter(email, company, job_title, job_description):
     if "Best regards," not in cover_letter:
         cover_letter += f"\n\nBest regards,\n{student['full_name']}\nEmail: {student['email']}\nPhone: {student['phone']}\nLinkedIn: {student['linkedin']}\n(Resume Attached)"
 
-    return cover_letter
+    # Format full cover letter for download
+    full_cover_letter = f"""{student['full_name']}
+{student['email']}
+{student['phone']}
+{student['linkedin']}
+{today_date}
+
+{cover_letter}
+"""
+    return cover_letter, full_cover_letter
+
+# Generate .docx file
+def create_cover_letter_docx(full_cover_letter, file_name):
+    doc = Document()
+    doc.add_paragraph(full_cover_letter)
+
+    buffer = BytesIO()
+    doc.save(buffer)
+    buffer.seek(0)
+
+    return buffer
 
 
 # 🚀 Streamlit UI
 st.title("📄 AI Cover Letter Generator")
 st.write("Generate a professional cover letter tailored to your details and job description.")
 
-email = st.text_input("Enter your email:")
+email = st.session_state.email
 company = st.text_input("Company Name:")
 job_title = st.text_input("Job Title:")
-job_description = st.text_area("Job Description:", height=150)
+job_description = st.text_area("Job Description:", height=200)
 
 if st.button("Generate Cover Letter"):
     if email and company and job_title and job_description:
         with st.spinner("Generating your cover letter..."):
-            cover_letter = generate_cover_letter(email, company, job_title, job_description)
+            cover_letter, full_cover_letter = generate_cover_letter(email, company, job_title, job_description)
         st.success("✅ Cover Letter Generated!")
-        st.text_area("Your Cover Letter:", cover_letter, height=300)
+        st.text_area("Your Cover Letter:", cover_letter, height=400)
+        file_name = f"Cover_Letter_{job_title}_{company}.docx"
+        docx_file = create_cover_letter_docx(full_cover_letter, file_name)
+
+        st.download_button(
+                label="📥 Download Cover Letter (DOCX)",
+                data=docx_file,
+                file_name=file_name,
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            )
     else:
         st.error("⚠️ Please fill all fields!")
 
+st.sidebar.button("Logout", on_click=lambda: st.session_state.update({"authenticated": False, "email": None, "full_name": None}))

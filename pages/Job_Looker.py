@@ -17,6 +17,10 @@ from PyPDF2 import PdfReader
 # Load environment variables
 load_dotenv()
 
+if "authenticated" not in st.session_state or not st.session_state.authenticated:
+    st.error("You must be logged in to access this page!")
+    st.stop()
+
 # MongoDB Setup
 DB_NAME = os.getenv("DB")
 C2 = os.getenv("C2")
@@ -206,5 +210,6 @@ if st.button("🔎 Find Jobs"):
         else:
             st.warning("No highly relevant jobs found based on AI matching.")
 
+st.sidebar.button("Logout", on_click=lambda: st.session_state.update({"authenticated": False, "email": None, "full_name": None}))
 
 

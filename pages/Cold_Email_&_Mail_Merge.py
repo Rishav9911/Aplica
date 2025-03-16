@@ -148,7 +148,7 @@ st.title("📩 AI-Powered Cold Email Generator & Bulk Sender")
 
 # Section 1: Cold Email Generator
 st.header("📧 Cold Email Generator")
-email = st.text_input("Enter Your Registered Email:")
+email = st.session_state.email
 company = st.text_input("Enter Company Name:")
 role = st.text_input("Enter Role:")
 
