@@ -236,6 +236,7 @@ location = st.text_input("Current Location (City, Country)", get_value("location
 st.header("Education")
 highest_degree = st.selectbox("Highest Degree", ["High School", "Diploma", "Bachelor's", "Master's", "PhD"], index=["High School", "Diploma", "Bachelor's", "Master's", "PhD"].index(get_value("highest_degree", "Bachelor's")))
 university = st.text_input("University/College Name", get_value("university"))
+course = st.text_input("Course", get_value("course"))
 field_of_study = st.text_input("Field of Study", get_value("field_of_study"))
 graduation_year = st.number_input("Year of Graduation", min_value=1900, max_value=2100, step=1, value=int(get_value("graduation_year", 2025)))
 cgpa = st.number_input("CGPA (if applicable)", min_value=0.0, max_value=10.0, step=0.1, value=float(get_value("cgpa", 0.0)))
@@ -296,12 +297,17 @@ def store_or_update_profile():
         "email": email,
         "full_name": full_name,
         "phone": phone,
+        "address": address,
+        "city": city,
+        "state": state,
+        "pincode": pincode,
         "linkedin": linkedin,
         "github": github,
         "portfolio": portfolio,
         "location": location,
         "highest_degree": highest_degree,
         "university": university,
+        "course": course,
         "field_of_study": field_of_study,
         "graduation_year": graduation_year,
         "cgpa": cgpa,
