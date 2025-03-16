@@ -62,6 +62,3 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
-
-
-
