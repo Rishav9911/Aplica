@@ -7,12 +7,12 @@ import pandas as pd
 import streamlit as st
 import urllib.parse
 import time
+from io import BytesIO
 from bs4 import BeautifulSoup
 from sentence_transformers import SentenceTransformer
 from pymongo import MongoClient
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
-from io import BytesIO
 
 # Load environment variables
 load_dotenv()
@@ -195,9 +195,16 @@ if st.button("🔎 Find Jobs"):
         if matched_jobs:
             st.success(f"✅ Found {len(matched_jobs)} relevant jobs!")
             if view_option == "View Only Top 5 Matches":
-                matched_jobs = matched_jobs[:5]  # Show only top 5 jobs
+                matched_jobs = matched_jobs[:5]
 
-            df = pd.DataFrame(matched_jobs)
-            st.dataframe(df)
+            for job in matched_jobs:
+                st.markdown(f"**{job['Title']}** at {job['Company']} ({job['Location']})\n"
+                            f"[🔗 Apply Now]({job['Job URL']})\n"
+                            f"🔥 **Match Score:** {job['Similarity Score']:.2f}\n\n"
+                            f"📄 **Job Description:** {job['Full Description']}")
+                st.write("---")
         else:
             st.warning("No highly relevant jobs found based on AI matching.")
+
+
+
