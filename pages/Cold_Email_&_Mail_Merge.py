@@ -39,7 +39,7 @@ The email should be **tailored to {company}**, reflecting its industry, values, 
 - Name: {student['full_name']}
 - Degree: {student['highest_degree']} in {student['field_of_study']} from {student['university']}
 - Technical Skills: {', '.join(student['technical_skills'])}
-- Internships: {', '.join(student['internships']) if student['internships'] else 'None'}
+- Internships: {', '.join(map(str, student['internships'])) if student['internships'] else 'None'}
 
 **Guidelines:**
 - Use a **catchy email subject line** (Make it the **first line of output**).
@@ -142,9 +142,76 @@ def send_email(to_email, subject, body, creds, attachment_path=None):
 
     return response.json()
 
+st.markdown(
+    """
+    <style>
+
+
+        /* Title Styling */
+        h1 {
+            color: #1a73e8;
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        /* Section headers */
+        h2, h3 {
+            color: #333;
+            border-bottom: 2px solid #1a73e8;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+
+        /* Inputs and text areas */
+        input, textarea {
+            border-radius: 8px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            width: 100%;
+        }
+
+        /* Buttons */
+        .stButton>button {
+            background-color: #1a73e8;
+            color: white;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .stButton>button:hover {
+            background-color: #0c5cc7;
+        }
+
+        /* File uploader */
+        .stFileUploader {
+            background-color: #1a73e8;
+            border-radius: 8px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        /* Success & error messages */
+        .stAlert {
+            font-size: 16px;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .stSidebar .stButton>button {
+            background-color: #ff4d4d;
+        }
+
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 
 # Streamlit UI
-st.title("📩 AI-Powered Cold Email Generator & Bulk Sender")
+st.title("🚀 AI-Powered Email Outreach")
 
 # Section 1: Cold Email Generator
 st.header("📧 Cold Email Generator")

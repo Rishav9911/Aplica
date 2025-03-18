@@ -77,8 +77,44 @@ def logout():
 
     st.rerun()
 
+st.markdown("""
+    <style>
+        
+        h1 {
+            text-align: center;
+            color: #ff6600;
+        }
+
+        .css-1d391kg { 
+            background-color: #f4f4f4 !important;
+            border-right: 3px solid #ff6600;
+        }
+
+        div.stButton > button {
+            background-color: #ff6600;
+            color: white;
+            font-weight: bold;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        div.stButton > button:hover {
+            background-color: #cc5500;
+        }
+
+        input {
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        footer {visibility: hidden;}
+    </style>
+""", unsafe_allow_html=True)
+
+
 # UI Components
-st.title("Aplica+ Authentication")
+st.title("Welcome to Aplica+ ")
 
 menu = st.sidebar.selectbox("Menu", ["Login", "Register"])
 

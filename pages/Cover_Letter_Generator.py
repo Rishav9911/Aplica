@@ -50,7 +50,7 @@ def generate_cover_letter(email, company, job_title, job_description):
     - University: {student['university']}
     - Degree: {student['highest_degree']} in {student['field_of_study']}
     - Technical Skills: {', '.join(student['technical_skills'])}
-    - Internship/Project Experience: {', '.join(student['internships']) if student['internships'] else 'None'}
+    - Internships: {', '.join(map(str, student['internships'])) if student['internships'] else 'None'}
     - LinkedIn: {student['linkedin']}
     - Contact Email: {student['email']}
     - Contact Phone: {student['phone']}
@@ -104,6 +104,64 @@ def create_cover_letter_docx(full_cover_letter, file_name):
     buffer.seek(0)
 
     return buffer
+
+import streamlit as st
+
+# Apply custom CSS styling
+st.markdown("""
+    <style>
+    /* General App Styling */
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+    }
+    
+    /* Input Fields */
+    textarea, input {
+        border-radius: 10px !important;
+        border: 2px solid #004aad !important;
+        padding: 10px !important;
+        font-size: 16px !important;
+    }
+    
+    /* Buttons */
+    div.stButton > button {
+        background-color: #004aad;
+        color: white;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 8px;
+        transition: 0.3s;
+    }
+    
+    div.stButton > button:hover {
+        background-color: #003080;
+        transform: scale(1.05);
+    }
+    
+    /* Success Message */
+    .stAlert {
+        background-color: #d4edda;
+        color: #155724;
+        border-left: 6px solid #28a745;
+        padding: 10px;
+        border-radius: 10px;
+    }
+    
+    /* Spinner Animation */
+    .stSpinner > div {
+        animation: spin 1.5s linear infinite;
+    }
+    
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    </style>
+""", unsafe_allow_html=True)
 
 
 # 🚀 Streamlit UI

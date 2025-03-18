@@ -19,13 +19,87 @@ client = MongoClient(MONGO_URI)
 db = client[DB_NAME]
 profiles_collection = db[C2] 
 
+st.markdown("""
+    <style>
+        /* Center the main title */
+        h1 {
+            text-align: center;
+            color: #ff6600;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        /* Style section headers */
+        h2 {
+            color: #0077b6;
+            border-bottom: 3px solid #0077b6;
+            padding-bottom: 5px;
+        }
+
+        /* Sidebar Styling */
+        .css-1d391kg {
+            background-color: #f4f4f4 !important;
+            border-right: 3px solid #ff6600;
+        }
+
+        /* Style Expander Sections */
+        .st-expander {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Style Sidebar Logout Button */
+        div.stButton > button {
+            background-color: #ff6600;
+            color: white;
+            font-weight: bold;
+            border-radius: 10px;
+            padding: 10px;
+            width: 100%;
+        }
+
+        div.stButton > button:hover {
+            background-color: #cc5500;
+        }
+
+        /* Profile Section Styling */
+        .profile-box {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Download Resume Button */
+        .stDownloadButton button {
+            background-color: #0077b6;
+            color: white;
+            font-weight: bold;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .stDownloadButton button:hover {
+            background-color: #005f91;
+        }
+
+        /* Hide Streamlit Default Menu & Footer */
+        #MainMenu {visibility: hidden;}
+        footer {visibility: hidden;}
+    </style>
+""", unsafe_allow_html=True)
+
+
 
 # Redirect if not authenticated
 if "authenticated" not in st.session_state or not st.session_state.authenticated:
     st.error("You must be logged in to access this page!")
     st.stop()
 
-st.title(f"Welcome, {st.session_state.full_name}! Your Profile Overview")
+st.title(f"Welcome, {st.session_state.full_name}!")
+st.title(f"Your Profile Overview")
 
 # Fetch user profile
 user_profile = profiles_collection.find_one({"email": st.session_state.email})
