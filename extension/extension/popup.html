@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Aplica+</title>
@@ -15,4 +15,81 @@
 
     <script src="popup.js"></script>
 </body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Aplica+</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+        color: #fff;
+        width: 250px;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        text-align: center;
+      }
+
+      h3 {
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      input {
+        width: 93%;
+        padding: 10px;
+        border: none;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        outline: none;
+        transition: transform 0.2s ease-in-out;
+      }
+
+      input:focus {
+        transform: scale(1.05);
+      }
+
+      button {
+        width: 100%;
+        padding: 10px;
+        background: #ff69b4;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease-in-out;
+      }
+
+      button:hover {
+        background: #ff1493;
+        transform: scale(1.05);
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      body,
+      input,
+      button {
+        animation: fadeIn 0.5s ease-out;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>Aplica+ AutoFill</h3>
+    <input type="email" id="emailInput" placeholder="Enter your email" />
+    <button id="autofillButton">AutoFill Form</button>
+
+    <script src="popup.js"></script>
+  </body>
 </html>
