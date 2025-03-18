@@ -50,7 +50,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                         console.log("Success: Sent student data to content.js:", res);
                                     }
                                 });
-                            }, 500); 
+                            }, 1500);  // Increased delay for better execution
+                            
                         }
                     );
                 });

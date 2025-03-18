@@ -43,7 +43,7 @@ def generate_cover_letter(email, company, job_title, job_description):
     - University: {student['university']}
     - Degree: {student['highest_degree']} in {student['field_of_study']}
     - Technical Skills: {', '.join(student['technical_skills'])}
-    - Internship/Project Experience: {', '.join(student['internships']) if student['internships'] else 'None'}
+    - Internship/Project Experience: {', '.join(map(str,student['internships'])) if student['internships'] else 'None'}
     - LinkedIn: {student['linkedin']}
     - Contact Email: {student['email']}
     - Contact Phone: {student['phone']}
